@@ -1,38 +1,35 @@
-import React from 'react'
+import instance from '../API/axios';
+import React, { useEffect, useState } from 'react'
 import Video from '../components/Video'
 
 
 function App() {
+  const [videos, setVideos] = useState([])
+
+  useEffect( () => {
+    async function fetchPosts () {
+    const response = await instance.get('/v2/posts')
+    setVideos(response.data)
+  }
+  fetchPosts()
+  }, [])
   return (
     <div className='app'>
       <div className='app__container'>
-        <Video 
-        video='https://player.vimeo.com/external/473869656.sd.mp4?s=90ebd81900b33aa05e7196c30757a8726c217392&profile_id=164'
-        channel='Voyager'
-        description='Aloha, guys! Watch relax video'
-        song='Pink Floyd - Money'
-        likes={99}
-        messages={222}
-        shares={13}
-        />
-        <Video 
-        video='https://player.vimeo.com/external/478742696.sd.mp4?s=a94a35b5fd045d82046b9ed5f30397212ed971ae&profile_id=164'
-        channel='Hansol'
-        description='THIS NOT LAMA'
-        song='Pink Floyd - Another brick in the wall'
-        likes={71}
-        messages={190}
-        shares={8}
-        />
-        <Video 
-        video='https://player.vimeo.com/external/476721238.sd.mp4?s=bfb2b3af995227e0fe5fdeb129becae4bf29d65c&profile_id=164'
-        channel='Kovach'
-        description='Ururu-urururuuuu'
-        song='Pink Floyd - Marooned'
-        likes={89}
-        messages={301}
-        shares={23}
-        />
+        {videos.map( 
+          ({video, channel, description, song, likes, messages, shares, _id}) => (
+          <Video 
+          video={video}
+          channel={channel}
+          description={description}
+          song={song}
+          likes={likes}
+          messages={messages}
+          shares={shares}
+          key={_id}
+          />
+        ))}
+        
       </div>
     </div>
   );
